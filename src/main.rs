@@ -6,9 +6,7 @@ use std::{os::unix::prelude::OsStrExt, path::PathBuf, sync::Arc};
 use tokio::{fs::File, io::AsyncReadExt};
 
 #[derive(Parser, Debug)]
-#[command(author = "loafey", version = "0.1", about = "
-A tool to get the status of your git repos.
-Designed to easily be integrated into prompts.", long_about = None)]
+#[command(author = "loafey", version = "0.1", about = "A tool that searches through your disc using a set of Regex strings. Can either look for file titles or look through file content", long_about = None)]
 struct Options {
     /// The folder to search from
     #[arg(
@@ -26,6 +24,7 @@ struct Options {
         default_value = "false"
     )]
     search_content: bool,
+    /// Your terms to search through. Simply input them after your last argument.
     #[arg(value_name = "STRING", trailing_var_arg = true)]
     search_terms: Vec<String>,
 }
