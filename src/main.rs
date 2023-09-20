@@ -48,9 +48,9 @@ async fn main() {
 
 #[async_recursion]
 async fn worker(path: PathBuf, search_content: bool, regex: Arc<Vec<Regex>>) {
-    let children = /*tokio::task::spawn_blocking({
+    let children = tokio::task::spawn({
         let regex = regex.clone();
-        move || */{
+        async move {
             let mut children = Vec::new();
             if let Ok(read_dir) = path.read_dir() {
                 for file in read_dir.filter_map(|d| d.ok()) {
@@ -62,27 +62,27 @@ async fn worker(path: PathBuf, search_content: bool, regex: Arc<Vec<Regex>>) {
                                 file.file_name().as_bytes().to_vec()
                             } else {
                                 let mut bytes = String::new();
-                                if let Ok(mut file) = File::open(file.path()).await{
+                                if let Ok(mut file) = File::open(file.path()).await {
                                     let _ = file.read_to_string(&mut bytes).await;
                                 }
                                 bytes.as_bytes().to_vec()
-                            }; 
+                            };
                             for regex in &*regex {
                                 if regex.captures(&bytes).is_some() {
                                     let path = format!("{:?}", file.path());
                                     println!("{}", &path[1..path.len() - 1]);
                                     break;
                                 }
-                            
-                        }} 
+                            }
+                        }
                     }
                 }
             }
             children
         }
-    /*})
+    })
     .await
-    .unwrap() */;
+    .unwrap();
     futures::future::join_all(
         children
             .into_iter()
