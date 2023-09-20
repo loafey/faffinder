@@ -1,13 +1,8 @@
 #![feature(let_chains)]
-use anyhow::Result;
 use async_recursion::async_recursion;
 use clap::Parser;
 use regex::bytes::Regex;
-use std::{
-    os::unix::prelude::OsStrExt,
-    path::{Path, PathBuf},
-    sync::Arc,
-};
+use std::{os::unix::prelude::OsStrExt, path::PathBuf, sync::Arc};
 use tokio::{fs::File, io::AsyncReadExt};
 
 #[derive(Parser, Debug)]
